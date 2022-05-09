@@ -1,8 +1,11 @@
 package com.my.flowabledemo;
 
+import java.util.HashMap;
+import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.ProcessEngine;
 import org.flowable.engine.repository.Deployment;
+import org.flowable.engine.runtime.ProcessInstance;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -50,7 +53,19 @@ class FlowableDemoApplicationTests {
      */
     @Test
     void fun3(){
-
+        //变量
+        Map<String,Object> params = new HashMap<String,Object>(){{
+            put("name","测试人员");
+//            //网关判断变量
+//            put("approved",true);
+        }};
+        //启动流程,绑定变量
+        ProcessInstance processInstance = processEngine.getRuntimeService()
+                                                       .startProcessInstanceByKey("testRequest", params);
+        log.info("流程id:"+processInstance.getProcessDefinitionId());
+        log.info("流程部署id:"+processInstance.getDeploymentId());
+        log.info("流程活跃id:"+processInstance.getActivityId());
+        log.info("流程实例id:"+processInstance.getId());
     }
 
 }
