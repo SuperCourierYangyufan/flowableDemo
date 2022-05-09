@@ -1,0 +1,13 @@
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://rm-bp19diz4398v09w8evo.mysql.rds.aliyuncs.com:3306/flowable?useSSL=false&serverTimezone=UTC&nullCatalogMeansCurrent=true
+    username: root
+    password: _Yang199691
+flowable:
+#  关闭定时器job
+  async-executor-activate: false
+  database-schema-update: true
+server:
+  port: 8082
