@@ -15,7 +15,7 @@
     <startEvent id="startEvent"/>
     <sequenceFlow sourceRef="startEvent" targetRef="approveTask"/>
 
-    <userTask id="approveTask" name="同意或者拒绝" flowable:assignee="yyf"/>
+    <userTask id="approveTask" name="同意或者拒绝"/>
     <sequenceFlow sourceRef="approveTask" targetRef="decision"/>
 
     <exclusiveGateway id="decision"/>
@@ -42,7 +42,7 @@
     <sequenceFlow sourceRef="holidayApprovedTask" targetRef="approveEnd"/>
 
     <serviceTask id="sendRejectionMail" name="Send out rejection email"
-      flowable:class="com.my.flowabledemo.event.SendEmailEvent"/>
+      flowable:class="org.flowable.SendRejectionMail"/>
     <sequenceFlow sourceRef="sendRejectionMail" targetRef="rejectEnd"/>
 
     <endEvent id="approveEnd"/>
