@@ -20,3 +20,6 @@
 * act_ru_execution 流程运行消息,详细,完成数据后就没了
 * act_hi_actinst 流程运行历史记录,详情,完成数据后添加
 * act_hi_identitylink 流程运行的处理人
+
+### 事件
+* XML定义好对应的事件类后,需要类实现JavaDelegate.public void execute(DelegateExecution execution),使用springUtils
