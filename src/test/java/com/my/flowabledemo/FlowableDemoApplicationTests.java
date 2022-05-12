@@ -8,6 +8,7 @@ import org.flowable.engine.ProcessEngine;
 import org.flowable.engine.history.HistoricActivityInstance;
 import org.flowable.engine.repository.Deployment;
 import org.flowable.engine.runtime.ProcessInstance;
+import org.flowable.identitylink.api.IdentityLink;
 import org.flowable.task.api.Task;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,7 +85,15 @@ class FlowableDemoApplicationTests {
             log.info(task.getId());
             log.info(task.getProcessDefinitionId());
             log.info(task.getName());
+            List<IdentityLink> identityLinkList = processEngine.getTaskService()
+                                                                   .getIdentityLinksForTask(task.getId());
+            for(IdentityLink identityLink:identityLinkList){
+                log.info(identityLink.getGroupId());
+                log.info(identityLink.getUserId());
+            }
+            log.info("================================================");
         }
+
     }
 
     /**
