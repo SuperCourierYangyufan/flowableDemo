@@ -1,5 +1,6 @@
 package com.my.flowabledemo;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -86,8 +87,8 @@ class FlowableDemoApplicationTests {
             log.info(task.getProcessDefinitionId());
             log.info(task.getName());
             List<IdentityLink> identityLinkList = processEngine.getTaskService()
-                                                                   .getIdentityLinksForTask(task.getId());
-            for(IdentityLink identityLink:identityLinkList){
+                                                               .getIdentityLinksForTask(task.getId());
+            for (IdentityLink identityLink : identityLinkList) {
                 log.info(identityLink.getGroupId());
                 log.info(identityLink.getUserId());
             }
@@ -139,5 +140,55 @@ class FlowableDemoApplicationTests {
             log.info(histor.getDurationInMillis().toString());
             log.info("==================================");
         }
+    }
+
+    /**
+     * 串行回退 若 并行网关某线某节点还是回退至并行网关内 == 串行
+     */
+    @Test
+    void fun7() {
+        //串行==排他网关==多人会签
+        processEngine.getRuntimeService()
+                     .createChangeActivityStateBuilder()
+                     .processInstanceId("流程实例id")
+                     //节点跳转
+                     .moveActivityIdTo("当前节点id", "目标节点id")
+                     //节点跳转-根据Execution
+                     .moveExecutionToActivityId(
+                         processEngine.getTaskService().createTaskQuery().taskId("任务id").singleResult()
+                                      .getExecutionId(), "目标节点id")
+                     .changeState();
+    }
+
+    /**
+     * 并行回退
+     */
+    @Test
+    void fun8() {
+        // 并行网关两条分支线内,某节点回退至并行网关之前,需要并行网关两条分支全部回退至并行网关前
+        List<String> oldActIds = new ArrayList<String>() {{
+            add("分支线1某节点");
+            add("分支线2某节点");
+        }};
+        processEngine.getRuntimeService()
+                     .createChangeActivityStateBuilder()
+                     .processInstanceId("流程实例id")
+                     .moveActivityIdsToSingleActivityId(oldActIds, "目标节点id");
+
+        // 并行网关后,回退到并行网关内,需要回退到并行多条线上
+        processEngine.getRuntimeService()
+                     .createChangeActivityStateBuilder()
+                     .processInstanceId("流程实例id")
+                     .moveSingleActivityIdToActivityIds("当前id", oldActIds);
+    }
+
+    /**
+     * 多人会签
+     */
+    @Test
+    void fun9() {
+        //需要XML设置[sequential:true串行,false并行,Loop cardinality:循环次数,Collection:循环集合Or类,
+        //Element variable:循环集合循环出来的对象key,Completion condition:结束表达式Or类]
+        //多实例,自带参数 nrOfInstances:实例总数 nrOfActiveInstances:未完成的实例 nrOfCompletedInstances:已完成实例
     }
 }
