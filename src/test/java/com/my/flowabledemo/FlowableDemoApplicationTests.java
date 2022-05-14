@@ -1,12 +1,17 @@
 package com.my.flowabledemo;
 
+import com.my.flowabledemo.cmd.CustomInjectUserTaskInProcessInstanceCmd;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
+import org.flowable.bpmn.model.BpmnModel;
+import org.flowable.bpmn.model.Process;
 import org.flowable.engine.ProcessEngine;
 import org.flowable.engine.history.HistoricActivityInstance;
+import org.flowable.engine.impl.dynamic.DynamicUserTaskBuilder;
+import org.flowable.engine.impl.util.ProcessDefinitionUtil;
 import org.flowable.engine.repository.Deployment;
 import org.flowable.engine.runtime.ProcessInstance;
 import org.flowable.identitylink.api.IdentityLink;
@@ -28,7 +33,7 @@ class FlowableDemoApplicationTests {
     void fun1() {
         Deployment deployment = processEngine.getRepositoryService()
                                              .createDeployment()
-                                             .addClasspathResource("test.bpmn20.xml")
+                                             .addClasspathResource("测试后加签.bpmn20.xml")
                                              .name("测试流程")
                                              .deploy();
         log.info("deployment:id" + deployment.getId());
@@ -64,12 +69,13 @@ class FlowableDemoApplicationTests {
         }};
         //启动流程,绑定变量
         ProcessInstance processInstance = processEngine.getRuntimeService()
-                                                       .startProcessInstanceByKey("testRequest", params);
+                                                       .startProcessInstanceByKey("testAddFlow", params);
         log.info("流程id:" + processInstance.getProcessDefinitionId());
         log.info("流程部署id:" + processInstance.getDeploymentId());
         log.info("流程活跃id:" + processInstance.getActivityId());
         log.info("流程实例id:" + processInstance.getId());
     }
+
 
     /**
      * 查询任务
@@ -190,5 +196,43 @@ class FlowableDemoApplicationTests {
         //需要XML设置[sequential:true串行,false并行,Loop cardinality:循环次数,Collection:循环集合Or类,
         //Element variable:循环集合循环出来的对象key,Completion condition:结束表达式Or类]
         //多实例,自带参数 nrOfInstances:实例总数 nrOfActiveInstances:未完成的实例 nrOfCompletedInstances:已完成实例
+    }
+
+    /**
+     * 动态加签测试
+     */
+    @Test
+    void fun10() {
+        String processInstaceId = "73bdad85-d2ca-11ec-aac1-00ff2a9c3e4d";
+        Task task = processEngine.getTaskService().createTaskQuery().processInstanceId(processInstaceId).singleResult();
+        String processDefinitionId = "";
+        DynamicUserTaskBuilder dynamicUserTaskBuilder = new DynamicUserTaskBuilder();
+        dynamicUserTaskBuilder.setId("act_2");
+        dynamicUserTaskBuilder.setName("测试节点2");
+        dynamicUserTaskBuilder.setAssignee("yyf");
+        BpmnModel bpmnModel = ProcessDefinitionUtil.getBpmnModel(task.getProcessDefinitionId());
+        Process process = bpmnModel.getProcesses().get(0);
+        processEngine.getManagementService().executeCommand(
+            new CustomInjectUserTaskInProcessInstanceCmd(processInstaceId, dynamicUserTaskBuilder,
+                                                         process.getFlowElement(task.getId())));
+    }
+
+
+    /**
+     * 删除运行的实例
+     */
+    @Test
+    void fun11() {
+        processEngine.getRuntimeService().deleteProcessInstance("73bdad85-d2ca-11ec-aac1-00ff2a9c3e4d", "删除实例");
+    }
+
+    /**
+     * 签收
+     */
+    @Test
+    void fun12() {
+        Task task = processEngine.getTaskService().createTaskQuery()
+                                 .processInstanceId("73bdad85-d2ca-11ec-aac1-00ff2a9c3e4d").singleResult();
+        processEngine.getTaskService().claim(task.getId(), "user1");
     }
 }

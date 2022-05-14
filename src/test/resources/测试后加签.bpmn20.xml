@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:flowable="http://flowable.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.flowable.org/processdef" exporter="Flowable Open Source Modeler" exporterVersion="6.7.2">
+  <process id="testAddFlow" name="测试后加签" isExecutable="true">
+    <startEvent id="act_start" flowable:formFieldValidation="true"></startEvent>
+    <userTask id="act_1" flowable:candidateUsers="user1,user2,user3" flowable:formFieldValidation="true">
+      <extensionElements>
+        <modeler:user-info-email-user1 xmlns:modeler="http://flowable.org/modeler"><![CDATA[user1@qq.com]]></modeler:user-info-email-user1>
+        <modeler:user-info-firstname-user1 xmlns:modeler="http://flowable.org/modeler"><![CDATA[user1]]></modeler:user-info-firstname-user1>
+        <modeler:user-info-lastname-user1 xmlns:modeler="http://flowable.org/modeler"><![CDATA[user1]]></modeler:user-info-lastname-user1>
+        <modeler:user-info-email-user2 xmlns:modeler="http://flowable.org/modeler"><![CDATA[user2@qq.com]]></modeler:user-info-email-user2>
+        <modeler:user-info-firstname-user2 xmlns:modeler="http://flowable.org/modeler"><![CDATA[user2]]></modeler:user-info-firstname-user2>
+        <modeler:user-info-lastname-user2 xmlns:modeler="http://flowable.org/modeler"><![CDATA[user2]]></modeler:user-info-lastname-user2>
+        <modeler:user-info-email-user3 xmlns:modeler="http://flowable.org/modeler"><![CDATA[user3@qq.com]]></modeler:user-info-email-user3>
+        <modeler:user-info-firstname-user3 xmlns:modeler="http://flowable.org/modeler"><![CDATA[user3]]></modeler:user-info-firstname-user3>
+        <modeler:user-info-lastname-user3 xmlns:modeler="http://flowable.org/modeler"><![CDATA[user3]]></modeler:user-info-lastname-user3>
+        <modeler:activiti-idm-candidate-user xmlns:modeler="http://flowable.org/modeler"><![CDATA[true]]></modeler:activiti-idm-candidate-user>
+        <modeler:initiator-can-complete xmlns:modeler="http://flowable.org/modeler"><![CDATA[false]]></modeler:initiator-can-complete>
+      </extensionElements>
+    </userTask>
+    <sequenceFlow id="sid-7EE26D38-9900-4E81-A7A5-D09C5AE96615" sourceRef="act_start" targetRef="act_1"></sequenceFlow>
+    <userTask id="act_3" flowable:candidateUsers="user4,user5,user6" flowable:formFieldValidation="true">
+      <extensionElements>
+        <modeler:user-info-email-user4 xmlns:modeler="http://flowable.org/modeler"><![CDATA[user4@qq.com]]></modeler:user-info-email-user4>
+        <modeler:user-info-firstname-user4 xmlns:modeler="http://flowable.org/modeler"><![CDATA[user4]]></modeler:user-info-firstname-user4>
+        <modeler:user-info-lastname-user4 xmlns:modeler="http://flowable.org/modeler"><![CDATA[user4]]></modeler:user-info-lastname-user4>
+        <modeler:user-info-email-user5 xmlns:modeler="http://flowable.org/modeler"><![CDATA[user5@qq.com]]></modeler:user-info-email-user5>
+        <modeler:user-info-firstname-user5 xmlns:modeler="http://flowable.org/modeler"><![CDATA[user5]]></modeler:user-info-firstname-user5>
+        <modeler:user-info-lastname-user5 xmlns:modeler="http://flowable.org/modeler"><![CDATA[user5]]></modeler:user-info-lastname-user5>
+        <modeler:user-info-email-user6 xmlns:modeler="http://flowable.org/modeler"><![CDATA[user6@qq.com]]></modeler:user-info-email-user6>
+        <modeler:user-info-firstname-user6 xmlns:modeler="http://flowable.org/modeler"><![CDATA[user6]]></modeler:user-info-firstname-user6>
+        <modeler:user-info-lastname-user6 xmlns:modeler="http://flowable.org/modeler"><![CDATA[user6]]></modeler:user-info-lastname-user6>
+        <modeler:activiti-idm-candidate-user xmlns:modeler="http://flowable.org/modeler"><![CDATA[true]]></modeler:activiti-idm-candidate-user>
+        <modeler:initiator-can-complete xmlns:modeler="http://flowable.org/modeler"><![CDATA[false]]></modeler:initiator-can-complete>
+      </extensionElements>
+    </userTask>
+    <sequenceFlow id="sid-AE4E0ED5-759C-402E-87E1-BE974D71BEB4" sourceRef="act_1" targetRef="act_3"></sequenceFlow>
+    <endEvent id="act_end"></endEvent>
+    <sequenceFlow id="sid-BE688F69-5DA5-4369-9191-73FB54DA2C17" sourceRef="act_3" targetRef="act_end"></sequenceFlow>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_testAddFlow">
+    <bpmndi:BPMNPlane bpmnElement="testAddFlow" id="BPMNPlane_testAddFlow">
+      <bpmndi:BPMNShape bpmnElement="act_start" id="BPMNShape_act_start">
+        <omgdc:Bounds height="30.0" width="30.0" x="100.0" y="163.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="act_1" id="BPMNShape_act_1">
+        <omgdc:Bounds height="80.0" width="100.0" x="210.0" y="138.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="act_3" id="BPMNShape_act_3">
+        <omgdc:Bounds height="80.0" width="100.0" x="396.5" y="138.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="act_end" id="BPMNShape_act_end">
+        <omgdc:Bounds height="28.0" width="28.0" x="636.5" y="161.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="sid-BE688F69-5DA5-4369-9191-73FB54DA2C17" id="BPMNEdge_sid-BE688F69-5DA5-4369-9191-73FB54DA2C17" flowable:sourceDockerX="50.0" flowable:sourceDockerY="40.0" flowable:targetDockerX="14.0" flowable:targetDockerY="14.0">
+        <omgdi:waypoint x="496.449999999999" y="177.26470588235293"></omgdi:waypoint>
+        <omgdi:waypoint x="636.5014786953226" y="175.20512537565725"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-7EE26D38-9900-4E81-A7A5-D09C5AE96615" id="BPMNEdge_sid-7EE26D38-9900-4E81-A7A5-D09C5AE96615" flowable:sourceDockerX="15.0" flowable:sourceDockerY="15.0" flowable:targetDockerX="50.0" flowable:targetDockerY="40.0">
+        <omgdi:waypoint x="129.94999913076796" y="178.0"></omgdi:waypoint>
+        <omgdi:waypoint x="209.99999999998067" y="178.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-AE4E0ED5-759C-402E-87E1-BE974D71BEB4" id="BPMNEdge_sid-AE4E0ED5-759C-402E-87E1-BE974D71BEB4" flowable:sourceDockerX="50.0" flowable:sourceDockerY="40.0" flowable:targetDockerX="50.0" flowable:targetDockerY="40.0">
+        <omgdi:waypoint x="309.94999999989545" y="178.0"></omgdi:waypoint>
+        <omgdi:waypoint x="396.4999999999509" y="178.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>
