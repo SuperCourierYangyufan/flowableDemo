@@ -1,8 +1,8 @@
 package com.my.flowabledemo.service.Impl;
 
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.my.flowabledemo.service.flowService;
-import com.sun.xml.internal.ws.util.xml.XmlUtil;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Calendar;
@@ -11,11 +11,19 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamReader;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.flowable.bpmn.BpmnAutoLayout;
 import org.flowable.bpmn.converter.BpmnXMLConverter;
 import org.flowable.bpmn.model.BpmnModel;
+import org.flowable.editor.language.json.converter.BpmnJsonConverter;
+import org.flowable.ui.common.util.XmlUtil;
+import org.flowable.ui.modeler.domain.AbstractModel;
+import org.flowable.ui.modeler.domain.Model;
+import org.flowable.ui.modeler.repository.ModelRepository;
+import org.flowable.ui.modeler.serviceapi.ModelService;
 import org.flowable.validation.ProcessValidator;
 import org.flowable.validation.ProcessValidatorFactory;
 import org.flowable.validation.ValidationError;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -24,10 +32,19 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 public class flowServiceImpl implements flowService {
+    @Autowired
+    private ModelRepository modelRepository;
+
+    @Autowired
+    private ModelService modelService;
+
     protected BpmnXMLConverter bpmnXmlConverter = new BpmnXMLConverter();
 
+    protected BpmnJsonConverter bpmnJsonConverter = new BpmnJsonConverter();
+
+
     @Override
-    public void createModel(InputStream inputStream) throws Exception{
+    public void createModel(InputStream inputStream) throws Exception {
         XMLInputFactory xif = XmlUtil.createSafeXmlInputFactory();
         InputStreamReader xmlIn = new InputStreamReader(inputStream, "UTF-8");
         XMLStreamReader xtr = xif.createXMLStreamReader(xmlIn);
@@ -38,11 +55,11 @@ public class flowServiceImpl implements flowService {
         if (CollectionUtils.isNotEmpty(errors)) {
             StringBuffer es = new StringBuffer();
             errors.forEach(ve -> es.append(ve.toString()).append("/n"));
-            return new ReturnVo(ReturnCode.SUCCESS,"模板验证失败，原因: " + es.toString());
+            throw new Exception("模板验证失败，原因: " + es.toString());
         }
         String fileName = bpmnModel.getMainProcess().getName();
         if (CollectionUtils.isEmpty(bpmnModel.getProcesses())) {
-            return new ReturnVo(ReturnCode.SUCCESS,"No process found in definition " + fileName);
+            throw new Exception("No process found in definition " + fileName);
         }
         if (bpmnModel.getLocationMap().size() == 0) {
             BpmnAutoLayout bpmnLayout = new BpmnAutoLayout(bpmnModel);
@@ -55,7 +72,6 @@ public class flowServiceImpl implements flowService {
             name = process.getName();
         }
         String description = process.getDocumentation();
-        User createdBy = SecurityUtils.getCurrentUserObject();
         //查询是否已经存在流程模板
         Model newModel = new Model();
         List<Model> models = modelRepository.findByKeyAndType(process.getId(), AbstractModel.MODEL_TYPE_BPMN);
@@ -67,11 +83,11 @@ public class flowServiceImpl implements flowService {
         newModel.setKey(process.getId());
         newModel.setModelType(AbstractModel.MODEL_TYPE_BPMN);
         newModel.setCreated(Calendar.getInstance().getTime());
-        newModel.setCreatedBy(createdBy.getId());
+        newModel.setCreatedBy("yyf");
         newModel.setDescription(description);
         newModel.setModelEditorJson(modelNode.toString());
         newModel.setLastUpdated(Calendar.getInstance().getTime());
-        newModel.setLastUpdatedBy(createdBy.getId());
-        modelService.createModel(newModel, SecurityUtils.getCurrentUserObject());
+        newModel.setLastUpdatedBy("yyf");
+        modelService.createModel(newModel, "yyf");
     }
 }
