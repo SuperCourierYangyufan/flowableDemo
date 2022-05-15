@@ -7,7 +7,7 @@ spring:
     password: _Yang199691
 flowable:
 #  关闭定时器job
-  async-executor-activate: false
+  async-executor-activate: true
   database-schema-update: true
 server:
   port: 8082

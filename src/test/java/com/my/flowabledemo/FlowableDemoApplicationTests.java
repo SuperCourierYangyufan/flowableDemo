@@ -8,13 +8,13 @@ import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.flowable.bpmn.model.BpmnModel;
 import org.flowable.bpmn.model.Process;
-import org.flowable.engine.ProcessEngine;
 import org.flowable.engine.history.HistoricActivityInstance;
 import org.flowable.engine.impl.dynamic.DynamicUserTaskBuilder;
 import org.flowable.engine.impl.util.ProcessDefinitionUtil;
 import org.flowable.engine.repository.Deployment;
 import org.flowable.engine.runtime.ProcessInstance;
 import org.flowable.identitylink.api.IdentityLink;
+import org.flowable.spring.SpringProcessEngineConfiguration;
 import org.flowable.task.api.Task;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 class FlowableDemoApplicationTests {
     @Autowired
-    private ProcessEngine processEngine;
+    private SpringProcessEngineConfiguration processEngine;
 
     /**
      * 简单部署流程
@@ -110,7 +110,7 @@ class FlowableDemoApplicationTests {
     void fun5() {
         Task task = processEngine.getTaskService()
                                  .createTaskQuery()
-                                 .taskAssignee("yyf")
+                                 .taskAssignee("user2")
                                  .singleResult();
 
         //变量
@@ -232,7 +232,28 @@ class FlowableDemoApplicationTests {
     @Test
     void fun12() {
         Task task = processEngine.getTaskService().createTaskQuery()
-                                 .processInstanceId("73bdad85-d2ca-11ec-aac1-00ff2a9c3e4d").singleResult();
-        processEngine.getTaskService().claim(task.getId(), "user1");
+                                 .processInstanceId("70386084-d350-11ec-9e97-e2d4e8ebad93").singleResult();
+        processEngine.getTaskService().claim(task.getId(), "user2");
     }
+
+    /**
+     * 取消签收
+     */
+    @Test
+    void fun13() {
+        Task task = processEngine.getTaskService().createTaskQuery()
+                                 .processInstanceId("70386084-d350-11ec-9e97-e2d4e8ebad93").singleResult();
+        processEngine.getTaskService().unclaim(task.getId());
+    }
+
+    /**
+     * 任务转办
+     */
+    @Test
+    void fun14() {
+        Task task = processEngine.getTaskService().createTaskQuery()
+                                 .processInstanceId("70386084-d350-11ec-9e97-e2d4e8ebad93").singleResult();
+        processEngine.getTaskService().setAssignee(task.getId(), "user1");
+    }
+
 }
